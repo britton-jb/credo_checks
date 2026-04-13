@@ -114,7 +114,7 @@ The following instructions assume you already have Credo configured and working 
                functions: [
                  {:erlang, :binary_to_term, "Use Plug.Crypto.non_executable_binary_to_term/2 instead."},
                ]},
-              {Jump.CredoChecks.LiveViewFormCanBeRehydrated, excluded: ["lib/my_app/"]}
+              {Jump.CredoChecks.LiveViewFormCanBeRehydrated, excluded: ["lib/my_app/"]},
               # Default start_after is "0"
               {Jump.CredoChecks.PreferTextColumns, start_after: "20240101000000"},
               {Jump.CredoChecks.TestHasNoAssertions, custom_assertion_functions: [:await_has, :await_with_timeout]},
@@ -146,3 +146,17 @@ The following instructions assume you already have Credo configured and working 
       ]
     }
     ```
+
+## Philosophy
+
+We use Credo checks primarily as just-in-time education for encouraging best practices. While education like this is valuable, the developer experience is strictly worse than making such education entirely unnecessary; for instance, by:
+
+- letting compiler warnings serve the educational function,
+- designing our APIs in a way that makes the anti-patterns impossible, or
+- automatically rewriting the code.
+
+Thus, we don't use Credo in cases where we can instead use [Quokka](https://github.com/emkguts/quokka) (or Quokka [plugins](https://github.com/emkguts/quokka/pull/141)) to automatically rewrite code. For instance, there's no need to bug developers with a Credo check that asks them to rewrite `Enum.map(...) |> Enum.into(%{})` to instead use `Map.new/2`; we can rewrite that automatically and never need the education.
+
+## Contribution guidelines
+
+We welcome pull requests, but be aware that if the proposed checks/changes aren't something we'd want to use in the Jump codebase, we'll politely decline them. (Feel free to open an issue to discuss and get conceptual agreement before doing the work if you'd like.)
