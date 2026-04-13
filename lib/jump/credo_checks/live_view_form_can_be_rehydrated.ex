@@ -15,7 +15,7 @@ defmodule Jump.CredoChecks.LiveViewFormCanBeRehydrated do
     explanations: [
       check: """
       Ensures that all forms with `phx-submit` have both an `id` and `phx-change` attribute specified.
-      
+
       This is critical for form rehydration, since LiveView can't maintain form state across
       deploys or reconnects without an ID and phx-change, leading to the form being totally reset.
       Forms without `phx-submit` are not LiveView forms and don't need these attributes.
@@ -29,6 +29,8 @@ defmodule Jump.CredoChecks.LiveViewFormCanBeRehydrated do
           <.form phx-submit="save">
       """
     ]
+
+  alias Credo.Check.Params
 
   @doc false
   @impl Credo.Check
@@ -261,8 +263,8 @@ defmodule Jump.CredoChecks.LiveViewFormCanBeRehydrated do
   defp check_heex_file(heex_file, parent_issue_meta) do
     content = File.read!(heex_file)
     params = IssueMeta.params(parent_issue_meta)
-    issue_category = Credo.Check.Params.category(params, __MODULE__)
-    exit_status_or_category = Credo.Check.Params.exit_status(params, __MODULE__) || issue_category
+    issue_category = Params.category(params, __MODULE__)
+    exit_status_or_category = Params.exit_status(params, __MODULE__) || issue_category
 
     find_forms_without_ids_in_heex_file(
       content,
@@ -462,7 +464,7 @@ defmodule Jump.CredoChecks.LiveViewFormCanBeRehydrated do
       trigger: trigger,
       category: issue_category,
       check: __MODULE__,
-      priority: Credo.Check.Params.priority(params, __MODULE__),
+      priority: Params.priority(params, __MODULE__),
       severity: Credo.Severity.default_value(),
       column: String.length(before) + 1,
       exit_status: Credo.Check.to_exit_status(exit_status_or_category)

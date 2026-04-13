@@ -1,4 +1,3 @@
-
 defmodule Jump.CredoChecks.LiveViewFormCanBeRehydratedTest do
   use Credo.Test.Case, async: true
 
